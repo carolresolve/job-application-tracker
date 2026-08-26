@@ -138,3 +138,31 @@ def cadastrar_candidato():
     candidatos.insert_one(candidato) #manda dicionário para o MongoDB.
 
     print("Candidato cadastrado com sucesso!")
+
+
+def listar_candidatos():
+    banco = conectar_banco()
+    
+    candidatos_coll = banco["candidatos"] #Faz a conexao com python
+
+    candidatos = list(candidatos_coll.find())  # Busca todos os candidatos na coleção e converte para lista Python
+
+    if not candidatos:
+        print("\n Nenhum candidato encontrado no sistema.")
+
+    print("\n==================== LISTA DE CANDIDATOS ====================")
+    for c in candidatos:
+        competencias_str = ", ".join(c.get("competencias", [])) # Junta a lista de competências em uma string separada por vírgula (usa lista vazia se o campo não existir)
+        preferencia = c.get("preferencia_area", "Não informada")
+
+        print(f"Nome:            {c.get('nome')}")
+        print(f"E-mail:          {c.get('email')}")
+        print(f"Telefone:        {c.get('telefone')}")
+        print(f"Cidade:          {c.get('cidade')}")
+        print(f"Gênero:          {c.get('genero')}")
+        print(f"Competências:    {competencias_str}")
+        print(f"Pref. Área:      {preferencia}")
+        print("-" * 60)
+
+
+    
