@@ -53,7 +53,7 @@ def validar_nif(nif):
     return False
 
 def menu_setores():
-    print("\nEscolha o setor da empresa: ")
+    print("\nEscolha o setor da empresa:")
     for n,s in enumerate(setores,1):
         print(f'{n} - {s}')
 
@@ -145,4 +145,4 @@ def cadastrar_empresa():
     empresa["email"] = email
 
     empresas.insert_one(empresa)
-    print("Empresa cadastrada com sucesso!")
+    print("Empresa cadastrado com sucesso!")
