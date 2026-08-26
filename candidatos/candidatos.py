@@ -164,5 +164,32 @@ def listar_candidatos():
         print(f"Pref. Área:      {preferencia}")
         print("-" * 60)
 
+def procurar_candidato():
+    banco = conectar_banco()
+    candidatos_coll = banco["candidatos"]
+    print("\n=== BUSCAR UM CANDIATO? ===")
+    print("\n1 - Buscar por Nome ")
+    print("\n2 - Buscar por E-mail ")
+    escolha = input("\nComo você deseja buscar esse candidato? [Digite 1 ou 2] ")
+    if escolha not in ["1", "2"]:
+        print("Digite uma opção válida.")
+        return
+    if escolha == "1":
+        nome_busca = input("Digite o nome do candidato (ou parte dele): ").strip()
+        resultados = list(candidatos_coll.find({"nome": {"$regex": nome_busca, "$options": "i"}}))
+        if not resultados:
+            print("Nenhum candidato encontrado com este nome.")
+            return
+        print("==== CANDIDATOS ENCONTRADOS ====")
+        for i, b in enumerate(resultados,1):
+            print(f'{i} - {b["nome"]}')
 
-    
+    elif escolha == "2":
+        email_busca = input("Digite o email do candidato (ou parte dele): ").strip()
+        resultados_email = list(candidatos_coll.find({"email": {"$regex": email_busca, "$options": "i"}}))
+        if not resultados_email:
+            print("Nenhum candidato encontrado com este email.")
+            return
+        print("==== CANDIDATOS ENCONTRADOS ====")
+        for i, b in enumerate(resultados_email,1):
+            print(f'{i} - {b["nome"]} ({b["email"]})')

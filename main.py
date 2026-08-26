@@ -8,4 +8,5 @@ from empresas.empresas import *
 #print("Banco:", banco.name)
 #cadastrar_candidato()
 #cadastrar_empresa()
-listar_candidatos()
+#listar_candidatos()
+procurar_candidato()
