@@ -1,34 +1,35 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="boas-vindas">
-    <h2>🚀 Painel de Controle</h2>
-    <p>Gerencie seus candidatos, empresas e candidaturas em um só lugar.</p>
+  <h2>🚀 Painel de Controle</h2>
+  <p>Gerencie seus candidatos, empresas e candidaturas em um só lugar.</p>
 </div>
 
 <div class="cards-container">
-    <div class="card">
-        <h3>Candidatos</h3>
-        <p class="numero">{{ total_candidatos }}</p>
-        <div class="acoes">
-            <a href="/candidatos" class="btn">Ver Todos</a>
-        </div>
+  <div class="card">
+    <h3>Candidatos</h3>
+    <p class="numero">{{ total_candidatos }}</p>
+    <div class="acoes">
+      <a href="/candidatos" class="btn">Ver Todos</a>
     </div>
+  </div>
 
-    <div class="card">
-        <h3>Empresas</h3>
-        <p class="numero">{{ total_empresas }}</p>
-        <div class="acoes">
-            <a href="/empresas" class="btn">Ver Todas</a>
-        </div>
+  <div class="card">
+    <h3>Empresas</h3>
+    <p class="numero">{{ total_empresas }}</p>
+    <div class="acoes">
+      <a href="/empresas" class="btn">Ver Todas</a>
     </div>
+  </div>
 
-    <div class="card">
-        <h3>Candidaturas</h3>
-        <p class="numero">{{ total_candidaturas }}</p>
-        <div class="acoes">
-            <a href="/candidaturas" class="btn">Ver Todas</a>
-        </div>
+  <div class="card">
+    <h3>Candidaturas</h3>
+    <div class="numero">{{ total_candidaturas }}</div>
+    <div style="display: flex; gap: 0.5rem">
+      <a href="/candidaturas" class="btn">Ver Todas</a>
+      <a href="/candidaturas/nova" class="btn" style="background-color: #2563eb"
+        >+ Nova</a
+      >
     </div>
+  </div>
 </div>
 {% endblock %}

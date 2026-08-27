@@ -1,0 +1,76 @@
+{% extends "base.html" %} {% block content %}
+<div class="boas-vindas">
+  <h2>➕ Nova Candidatura</h2>
+  <p>Selecione o candidato e a empresa para registrar uma candidatura.</p>
+</div>
+
+<form
+  action="/candidaturas/nova"
+  method="POST"
+  style="max-width: 500px; background: #fff; padding: 2rem; border-radius: 8px"
+>
+  <div style="margin-bottom: 1rem">
+    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold"
+      >Candidato:</label
+    >
+    <select
+      name="candidato_id"
+      required
+      style="
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      "
+    >
+      <option value="">Selecione um candidato</option>
+      {% for c in candidatos %}
+      <option value="{{ c._id }}">{{ c.nome }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div style="margin-bottom: 1rem">
+    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold"
+      >Empresa:</label
+    >
+    <select
+      name="empresa_id"
+      required
+      style="
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      "
+    >
+      <option value="">Selecione uma empresa</option>
+      {% for e in empresas %}
+      <option value="{{ e._id }}">{{ e.nome }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div style="margin-bottom: 1.5rem">
+    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold"
+      >Status:</label
+    >
+    <select
+      name="status"
+      style="
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      "
+    >
+      <option value="Em Análise">Em Análise</option>
+      <option value="Entrevista Agendada">Entrevista Agendada</option>
+      <option value="Aprovado">Aprovado</option>
+      <option value="Reprovado">Reprovado</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn">Salvar Candidatura</button>
+</form>
+{% endblock %}

@@ -35,3 +35,4 @@ def cadastrar_candidatura():
     empresa_id = empresa_escolhida["_id"]
     nome_empresa = empresa_escolhida["nome"]
     print(f'empresa escolhida: {nome_empresa}')
+    

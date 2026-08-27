@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+<div class="boas-vindas">
+<h2>📋 Lista de Candidaturas</h2>
+<p>Acompanhe os candidatos aplicados às vagas das empresas.</p>
+</div>
+ 
+<table class="tabela">
+<thead>
+<tr>
+<th>Candidato</th>
+<th>Empresa</th>
+<th>Data / Status</th>
+</tr>
+</thead>
+<tbody>
+        {% for cand in candidaturas %}
+<tr>
+<td>{{ cand.nome_candidato }}</td>
+<td>{{ cand.nome_empresa }}</td>
+<td>{{ cand.status if cand.status else 'Pendente' }}</td>
+</tr>
+        {% else %}
+<tr>
+<td colspan="3" style="text-align: center;">Nenhuma candidatura encontrada.</td>
+</tr>
+        {% endfor %}
+</tbody>
+</table>
+{% endblock %}
