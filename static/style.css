@@ -1,0 +1,114 @@
+/* Reset básico e tipografia */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Menu Superior (Navbar) */
+.navbar {
+    background-color: #1e293b;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.navbar a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    color: #fff;
+}
+
+/* Conteúdo Principal */
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+h2 {
+    margin-bottom: 1.5rem;
+    color: #0f172a;
+}
+
+/* Mensagem de Boas-vindas */
+.boas-vindas {
+    margin-bottom: 2rem;
+}
+
+.boas-vindas p {
+    color: #64748b;
+    margin-top: 0.5rem;
+}
+
+/* Container de Cards do Dashboard */
+.cards-container {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card h3 {
+    color: #0f172a;
+    font-size: 1.2rem;
+}
+
+.card .numero {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2563eb;
+    margin: 1rem 0;
+}
+
+/* Botões do sistema */
+.btn {
+    display: inline-block;
+    background-color: #0f172a;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #1e293b;
+}

@@ -1,11 +1,34 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <title>Sistema de Recrutamento</title>
-</head>
-<body>
-    <h1>🚀 Sistema de Recrutamento</h1>
-    <p>Bem-vindo ao painel principal!</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="boas-vindas">
+    <h2>🚀 Painel de Controle</h2>
+    <p>Gerencie seus candidatos, empresas e candidaturas em um só lugar.</p>
+</div>
+
+<div class="cards-container">
+    <div class="card">
+        <h3>Candidatos</h3>
+        <p class="numero">{{ total_candidatos }}</p>
+        <div class="acoes">
+            <a href="/candidatos" class="btn">Ver Todos</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Empresas</h3>
+        <p class="numero">{{ total_empresas }}</p>
+        <div class="acoes">
+            <a href="/empresas" class="btn">Ver Todas</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Candidaturas</h3>
+        <p class="numero">{{ total_candidaturas }}</p>
+        <div class="acoes">
+            <a href="/candidaturas" class="btn">Ver Todas</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
