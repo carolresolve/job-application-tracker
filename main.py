@@ -14,4 +14,4 @@ from candidaturas.candidaturas import *
 #procurar_candidato()
 #listar_empresas()
 #cadastrar_candidatura()
-procurar_empresa()
+#procurar_empresa()
