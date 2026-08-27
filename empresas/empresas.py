@@ -146,3 +146,52 @@ def cadastrar_empresa():
 
     empresas.insert_one(empresa)
     print("Empresa cadastrado com sucesso!")
+
+def listar_empresas():
+    banco = conectar_banco()
+    empresas_coll = banco["empresas"]
+    empresas = list(empresas_coll.find())
+    if not empresas:
+        print("\n Nenhuma empresa encontrada no sistema.")
+        return
+
+    print("\n==================== LISTA DE EMPRESAS ====================")
+    for c in empresas:
+
+
+        print(f"Nome:            {c.get('nome')}")
+        print(f"E-mail:          {c.get('email')}")
+        print(f"Cidade:          {c.get('cidade')}")
+        print(f"NIF:             {c.get('nif')}")    
+        print(f"Setor:           {c.get('setor')}")   
+        print("-" * 60)
+
+def procurar_empresa():
+    banco = conectar_banco()
+    empresa_coll = banco["empresas"]
+    print("\n=== BUSCAR UMA EMPRESA ===")
+    print("\n1 - Buscar pelo Nome ")
+    print("\n2 - Buscar pelo E-mail ")
+    escolha = input("\nComo você deseja buscar essa empresa? [Digite 1 ou 2] ")
+    if escolha not in ["1", "2"]:
+        print("Digite uma opção válida.")
+        return
+    if escolha == "1":
+        nome_busca = input("Digite o nome da empresa (ou parte dela): ").strip()
+        resultados = list(empresa_coll.find({"nome": {"$regex": nome_busca, "$options": "i"}}))
+        if not resultados:
+            print("Nenhuma empresa encontrada com este nome.")
+            return
+        print("==== EMPRESAS ENCONTRADAS ====")
+        for i, b in enumerate(resultados,1):
+            print(f'{i} - {b["nome"]} ({b["email"]})')
+
+    elif escolha == "2":
+        email_busca = input("Digite o email da empresa (ou parte dela): ").strip()
+        resultados_email = list(empresa_coll.find({"email": {"$regex": email_busca, "$options": "i"}}))
+        if not resultados_email:
+            print("Nenhuma empresa encontrada com este email.")
+            return
+        print("==== EMPRESAS ENCONTRADAS ====")
+        for i, b in enumerate(resultados_email,1):
+            print(f'{i} - {b["nome"]} ({b["email"]})')
