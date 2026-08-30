@@ -13,7 +13,9 @@
                 <th>Nome</th>
                 <th>E-mail</th>
                 <th>Telefone</th>
+                <th>Cidade</th>
                 <th>Área / Cargo</th>
+                <th>Competências</th>
             </tr>
         </thead>
         <tbody>
@@ -22,11 +24,19 @@
                 <td><strong>{{ candidato.nome }}</strong></td>
                 <td>{{ candidato.email or '-' }}</td>
                 <td>{{ candidato.telefone or '-' }}</td>
+                <td>{{ candidato.cidade or '-' }}</td>
                 <td>{{ candidato.area or '-' }}</td>
+                <td>
+                    {% if candidato.competencias %}
+                        {{ candidato.competencias | join(', ') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="4" class="empty-msg">Nenhum candidato cadastrado ainda.</td>
+                <td colspan="6" class="empty-msg">Nenhum candidato cadastrado ainda.</td>
             </tr>
             {% endfor %}
         </tbody>
