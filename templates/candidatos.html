@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-action">
+    <h2>Candidatos Cadastrados</h2>
+    <a href="/candidatos/novo" class="btn-primary">+ Novo Candidato</a>
+</div>
+
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Área / Cargo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidato in candidatos %}
+            <tr>
+                <td><strong>{{ candidato.nome }}</strong></td>
+                <td>{{ candidato.email or '-' }}</td>
+                <td>{{ candidato.telefone or '-' }}</td>
+                <td>{{ candidato.area or '-' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="empty-msg">Nenhum candidato cadastrado ainda.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -112,5 +112,33 @@ def cadastrar_empresa():
 
     return render_template("nova_empresa.html", setores=SETORES)
 
+@app.route("/candidatos")
+def listar_candidatos():
+    banco = conectar_banco()
+    candidatos = list(banco["candidatos"].find())
+    return render_template("candidatos.html", candidatos=candidatos)
+
+@app.route("/candidatos/novo", methods=["GET", "POST"])
+def cadastrar_candidato():
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        email = request.form.get("email", "").strip()
+        telefone = request.form.get("telefone", "").strip()
+        area = request.form.get("area", "").strip()
+
+        if nome and email:
+            banco = conectar_banco()
+            banco["candidatos"].insert_one({
+                "nome": nome,
+                "email": email,
+                "telefone": telefone,
+                "area": area
+            })
+            return redirect(url_for("listar_candidatos"))
+
+    return render_template("novo_candidato.html")
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

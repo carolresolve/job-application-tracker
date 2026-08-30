@@ -2,25 +2,42 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Job Tracker</title>
-    <!-- O Flask busca arquivos CSS na pasta static -->
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
+      href="{{ url_for('static', filename='css/style.css') }}?v=1.2"
     />
   </head>
   <body>
-    <nav class="navbar">
-      <a href="/" class="logo">🚀 Job Tracker</a>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/candidatos">Candidatos</a></li>
-        <li><a href="/empresas">Empresas</a></li>
-        <li><a href="/candidaturas">Candidaturas</a></li>
-      </ul>
-    </nav>
+    <header
+      style="
+        background: #1f2937;
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      "
+    >
+      <h1 style="margin: 0; font-size: 1.25rem">
+        <a href="/" style="color: white; text-decoration: none">Job Tracker</a>
+      </h1>
+      <nav style="display: flex; gap: 1.5rem">
+        <a href="/" style="color: #d1d5db; text-decoration: none">Início</a>
+        <a href="/empresas" style="color: #d1d5db; text-decoration: none"
+          >Empresas</a
+        >
+        <a href="/candidatos" style="color: #d1d5db; text-decoration: none"
+          >Candidatos</a
+        >
+        <a href="/candidaturas" style="color: #d1d5db; text-decoration: none"
+          >Candidaturas</a
+        >
+      </nav>
+    </header>
 
-    <div class="container">{% block content %}{% endblock %}</div>
+    <main style="max-width: 900px; margin: 2rem auto; padding: 0 1rem">
+      {% block content %}{% endblock %}
+    </main>
   </body>
 </html>
