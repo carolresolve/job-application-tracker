@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-action">
+    <h2>Empresas Cadastradas</h2>
+    <a href="/empresas/nova" class="btn-primary">+ Nova Empresa</a>
+</div>
+
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>NIF</th>
+                <th>E-mail</th>
+                <th>Setor</th>
+                <th>Cidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empresa in empresas %}
+            <tr>
+                <td><strong>{{ empresa.nome }}</strong></td>
+                <td>{{ empresa.nif or '-' }}</td>
+                <td>{{ empresa.email or '-' }}</td>
+                <td>{{ empresa.setor or '-' }}</td>
+                <td>
+                    {% if empresa.localidade and empresa.localidade.cidade %}
+                        {{ empresa.localidade.cidade }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty-msg">Nenhuma empresa cadastrada ainda.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
