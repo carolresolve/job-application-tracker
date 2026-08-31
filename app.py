@@ -217,5 +217,58 @@ def editar_empresa(id):
 
     return render_template("editar_empresa.html", empresa=empresa, setores=SETORES)
 
+@app.route("/candidatos/excluir/<id>", methods=["POST"])
+def excluir_candidato(id):
+    banco = conectar_banco()
+    banco["candidatos"].delete_one({"_id": ObjectId(id)})
+    return redirect(url_for("listar_candidatos"))
+
+@app.route("/candidatos/editar/<id>", methods=["GET", "POST"])
+def editar_candidato(id):
+    banco = conectar_banco()
+    candidatos_coll = banco["candidatos"]
+    
+    candidato = candidatos_coll.find_one({"_id": ObjectId(id)})
+    if not candidato:
+        return redirect(url_for("listar_candidatos"))
+
+    erro = None
+
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        email = request.form.get("email", "").strip()
+        telefone = request.form.get("telefone", "").strip()
+        cidade = request.form.get("cidade", "").strip()
+        area = request.form.get("area", "").strip()
+        competencias = request.form.getlist("competencias")
+
+        if not validar_nome(nome):
+            erro = "O nome é obrigatório."
+        elif not validar_email(email):
+            erro = "E-mail inválido."
+        # Checa duplicidade Apenas se o email mudou
+        elif email != candidato.get("email") and email_existe(email, candidatos_coll):
+            erro = "Este e-mail já está cadastrado para outro candidato."
+        elif telefone and not validar_telefone(telefone):
+            erro = "Telefone inválido."
+
+        if erro:
+            return render_template("editar_candidato.html", candidato=candidato, competencias=COMPETENCIAS_DISPONIVEIS, erro=erro)
+
+        candidatos_coll.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {
+                "nome": nome,
+                "email": email,
+                "telefone": telefone,
+                "cidade": cidade,
+                "area": area,
+                "competencias": competencias
+            }}
+        )
+        return redirect(url_for("listar_candidatos"))
+
+    return render_template("editar_candidato.html", candidato=candidato, competencias=COMPETENCIAS_DISPONIVEIS)
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

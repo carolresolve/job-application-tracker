@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Editar Candidato</h2>
+
+{% if erro %}
+<div class="alert-error">
+    {{ erro }}
+</div>
+{% endif %}
+
+<form method="POST" action="/candidatos/editar/{{ candidato._id }}" class="form-container">
+    <div class="form-group">
+        <label for="nome">Nome Completo:*</label>
+        <input type="text" id="nome" name="nome" class="form-control" value="{{ candidato.nome }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">E-mail:*</label>
+        <input type="email" id="email" name="email" class="form-control" value="{{ candidato.email }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="tel" id="telefone" name="telefone" class="form-control" value="{{ candidato.telefone or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade" class="form-control" value="{{ candidato.cidade or '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="area">Área de Atuação / Cargo:</label>
+        <input type="text" id="area" name="area" class="form-control" value="{{ candidato.area or '' }}">
+    </div>
+
+    <div class="fieldset-box">
+        <legend>Competências / Tecnologias</legend>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-top: 0.5rem;">
+            {% for comp in competencias %}
+            <label style="font-weight: normal; cursor: pointer;">
+                <input type="checkbox" name="competencias" value="{{ comp }}" 
+                {% if candidato.competencias and comp in candidato.competencias %}checked{% endif %}> {{ comp }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button type="submit" class="btn-primary">Salvar Alterações</button>
+        <a href="/candidatos" class="btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

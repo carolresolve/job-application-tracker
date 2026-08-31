@@ -16,6 +16,7 @@
                 <th>Cidade</th>
                 <th>Área / Cargo</th>
                 <th>Competências</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -33,10 +34,17 @@
                         -
                     {% endif %}
                 </td>
+                <td class="actions-cell">
+                    <a href="/candidatos/editar/{{ candidato._id }}" class="btn-sm btn-edit">✏️ Editar</a>
+                    
+                    <form action="/candidatos/excluir/{{ candidato._id }}" method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja apagar o candidato {{ candidato.nome }}?');">
+                        <button type="submit" class="btn-sm btn-delete">🗑️ Excluir</button>
+                    </form>
+                </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="6" class="empty-msg">Nenhum candidato cadastrado ainda.</td>
+                <td colspan="7" class="empty-msg">Nenhum candidato cadastrado ainda.</td>
             </tr>
             {% endfor %}
         </tbody>
