@@ -1,31 +1,45 @@
-{% extends "base.html" %}
- 
+{% extends 'base.html' %}
+
 {% block content %}
-<div class="boas-vindas">
-<h2>📋 Lista de Candidaturas</h2>
-<p>Acompanhe os candidatos aplicados às vagas das empresas.</p>
+<div class="header-action">
+    <h2>Candidaturas Registradas</h2>
+    <a href="/candidaturas/nova" class="btn-primary">+ Nova Candidatura</a>
 </div>
- 
-<table class="tabela">
-<thead>
-<tr>
-<th>Candidato</th>
-<th>Empresa</th>
-<th>Data / Status</th>
-</tr>
-</thead>
-<tbody>
-        {% for cand in candidaturas %}
-<tr>
-<td>{{ cand.nome_candidato }}</td>
-<td>{{ cand.nome_empresa }}</td>
-<td>{{ cand.status if cand.status else 'Pendente' }}</td>
-</tr>
-        {% else %}
-<tr>
-<td colspan="3" style="text-align: center;">Nenhuma candidatura encontrada.</td>
-</tr>
-        {% endfor %}
-</tbody>
-</table>
+
+<div class="table-container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Candidato</th>
+                <th>Empresa</th>
+                <th>Vaga / Função</th>
+                <th>Status</th>
+                <th>Data de Candidatura</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidatura in candidaturas %}
+            <tr>
+                <td><strong>{{ candidatura.candidato_nome }}</strong></td>
+                <td>{{ candidatura.empresa_nome }}</td>
+                <td>{{ candidatura.vaga }}</td>
+                <td><span class="badge">{{ candidatura.status }}</span></td>
+                <td>{{ candidatura.data or '-' }}</td>
+                <td class="actions-cell">
+                    <a href="/candidaturas/editar/{{ candidatura._id }}" class="btn-sm btn-edit">✏️ Editar</a>
+                    
+                    <form action="/candidaturas/excluir/{{ candidatura._id }}" method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja apagar esta candidatura?');">
+                        <button type="submit" class="btn-sm btn-delete">🗑️ Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="empty-msg">Nenhuma candidatura registrada ainda.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

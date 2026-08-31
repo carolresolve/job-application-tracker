@@ -28,30 +28,45 @@ def listar_candidaturas():
     return render_template("candidaturas.html", candidaturas=candidaturas)
 
 @app.route("/candidaturas/nova", methods=["GET", "POST"])
-def cadastrar_candidatura():   
+def cadastrar_candidatura():
     banco = conectar_banco()
-    
+    candidatos_coll = banco["candidatos"]
+    empresas_coll = banco["empresas"]
+    candidaturas_coll = banco["candidaturas"]
+
+    erro = None
+    candidatos = list(candidatos_coll.find())
+    empresas = list(empresas_coll.find())
+
     if request.method == "POST":
         candidato_id = request.form.get("candidato_id")
         empresa_id = request.form.get("empresa_id")
-        status = request.form.get("status")
-        
-        candidato = banco["candidatos"].find_one({"_id": ObjectId(candidato_id)})
-        empresa = banco["empresas"].find_one({"_id": ObjectId(empresa_id)})
-        
-        banco["candidaturas"].insert_one({
-            "candidato_id": ObjectId(candidato_id),
-            "nome_candidato": candidato["nome"] if candidato else "",
-            "empresa_id": ObjectId(empresa_id),
-            "nome_empresa": empresa["nome"] if empresa else "",
-            "status": status
-        })
-        
-        return redirect(url_for("listar_candidaturas"))
+        vaga = request.form.get("vaga", "").strip()
+        status = request.form.get("status", "Em Análise").strip()
 
-    candidatos = list(banco["candidatos"].find())
-    empresas = list(banco["empresas"].find())
-    return render_template("nova_candidatura.html", candidatos=candidatos, empresas=empresas)
+        if not candidato_id or not empresa_id or not vaga:
+            erro = "Por favor, preencha todos os campos obrigatórios."
+        else:
+            cand = candidatos_coll.find_one({"_id": ObjectId(candidato_id)})
+            emp = empresas_coll.find_one({"_id": ObjectId(empresa_id)})
+
+            if not cand or not emp:
+                erro = "Candidato ou empresa selecionada não foram encontrados."
+            else:
+                from datetime import datetime
+
+                candidaturas_coll.insert_one({
+                    "candidato_id": ObjectId(candidato_id),
+                    "candidato_nome": cand.get("nome", "Sem Nome"),
+                    "empresa_id": ObjectId(empresa_id),
+                    "empresa_nome": emp.get("nome", "Sem Nome"),
+                    "vaga": vaga,
+                    "status": status,
+                    "data": datetime.now().strftime("%d/%m/%Y")
+                })
+                return redirect(url_for("listar_candidaturas"))
+
+    return render_template("nova_candidatura.html", candidatos=candidatos, empresas=empresas, erro=erro)
 
 @app.route("/empresas")
 def listar_empresas():
@@ -269,6 +284,68 @@ def editar_candidato(id):
         return redirect(url_for("listar_candidatos"))
 
     return render_template("editar_candidato.html", candidato=candidato, competencias=COMPETENCIAS_DISPONIVEIS)
+
+@app.route("/candidaturas/excluir/<id>", methods=["POST"])
+def excluir_candidatura(id):
+    banco = conectar_banco()
+    banco["candidaturas"].delete_one({"_id": ObjectId(id)})
+    return redirect(url_for("listar_candidaturas"))
+
+@app.route("/candidaturas/editar/<id>", methods=["GET", "POST"])
+def editar_candidatura(id):
+    banco = conectar_banco()
+    candidaturas_coll = banco["candidaturas"]
+    candidatos_coll = banco["candidatos"]
+    empresas_coll = banco["empresas"]
+
+    candidatura = candidaturas_coll.find_one({"_id": ObjectId(id)})
+    if not candidatura:
+        return redirect(url_for("listar_candidaturas"))
+
+    erro = None
+    candidatos = list(candidatos_coll.find())
+    empresas = list(empresas_coll.find())
+    
+    # Lista de status possíveis para a vaga
+    status_opcoes = ["Em Análise", "Entrevista Agendada", "Em Teste Técnico", "Aprovado", "Rejeitado"]
+
+    if request.method == "POST":
+        candidato_id = request.form.get("candidato_id")
+        empresa_id = request.form.get("empresa_id")
+        vaga = request.form.get("vaga", "").strip()
+        status = request.form.get("status", "").strip()
+
+        if not candidato_id or not empresa_id or not vaga:
+            erro = "Por favor, preencha todos os campos obrigatórios."
+        else:
+            cand = candidatos_coll.find_one({"_id": ObjectId(candidato_id)})
+            emp = empresas_coll.find_one({"_id": ObjectId(empresa_id)})
+
+            if not cand or not emp:
+                erro = "Candidato ou Empresa inválidos."
+            else:
+                candidaturas_coll.update_one(
+                    {"_id": ObjectId(id)},
+                    {"$set": {
+                        "candidato_id": ObjectId(candidato_id),
+                        "candidato_nome": cand["nome"],
+                        "empresa_id": ObjectId(empresa_id),
+                        "empresa_nome": emp["nome"],
+                        "vaga": vaga,
+                        "status": status
+                    }}
+                )
+                return redirect(url_for("listar_candidaturas"))
+
+    return render_template(
+        "editar_candidatura.html",
+        candidatura=candidatura,
+        candidatos=candidatos,
+        empresas=empresas,
+        status_opcoes=status_opcoes,
+        erro=erro
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

@@ -1,76 +1,43 @@
-{% extends "base.html" %} {% block content %}
-<div class="boas-vindas">
-  <h2>➕ Nova Candidatura</h2>
-  <p>Selecione o candidato e a empresa para registrar uma candidatura.</p>
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Cadastrar Nova Candidatura</h2>
+
+{% if erro %}
+<div class="alert-error">
+    {{ erro }}
 </div>
+{% endif %}
 
-<form
-  action="/candidaturas/nova"
-  method="POST"
-  style="max-width: 500px; background: #fff; padding: 2rem; border-radius: 8px"
->
-  <div style="margin-bottom: 1rem">
-    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold"
-      >Candidato:</label
-    >
-    <select
-      name="candidato_id"
-      required
-      style="
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-      "
-    >
-      <option value="">Selecione um candidato</option>
-      {% for c in candidatos %}
-      <option value="{{ c._id }}">{{ c.nome }}</option>
-      {% endfor %}
-    </select>
-  </div>
+<form method="POST" action="/candidaturas/nova" class="form-container">
+    <div class="form-group">
+        <label for="candidato_id">Candidato:*</label>
+        <select id="candidato_id" name="candidato_id" class="form-control" required>
+            <option value="">Selecione um candidato</option>
+            {% for c in candidatos %}
+            <option value="{{ c._id }}">{{ c.nome }} ({{ c.email }})</option>
+            {% endfor %}
+        </select>
+    </div>
 
-  <div style="margin-bottom: 1rem">
-    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold"
-      >Empresa:</label
-    >
-    <select
-      name="empresa_id"
-      required
-      style="
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-      "
-    >
-      <option value="">Selecione uma empresa</option>
-      {% for e in empresas %}
-      <option value="{{ e._id }}">{{ e.nome }}</option>
-      {% endfor %}
-    </select>
-  </div>
+    <div class="form-group">
+        <label for="empresa_id">Empresa:*</label>
+        <select id="empresa_id" name="empresa_id" class="form-control" required>
+            <option value="">Selecione uma empresa</option>
+            {% for e in empresas %}
+            <option value="{{ e._id }}">{{ e.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
 
-  <div style="margin-bottom: 1.5rem">
-    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold"
-      >Status:</label
-    >
-    <select
-      name="status"
-      style="
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-      "
-    >
-      <option value="Em Análise">Em Análise</option>
-      <option value="Entrevista Agendada">Entrevista Agendada</option>
-      <option value="Aprovado">Aprovado</option>
-      <option value="Reprovado">Reprovado</option>
-    </select>
-  </div>
+    <div class="form-group">
+        <label for="vaga">Vaga / Cargo:*</label>
+        <input type="text" id="vaga" name="vaga" class="form-control" placeholder="Ex: Desenvolvedor Python" required>
+    </div>
 
-  <button type="submit" class="btn">Salvar Candidatura</button>
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button type="submit" class="btn-primary">Salvar Candidatura</button>
+        <a href="/candidaturas" class="btn-secondary">Cancelar</a>
+    </div>
 </form>
 {% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Editar Candidatura</h2>
+
+{% if erro %}
+<div class="alert-error">
+    {{ erro }}
+</div>
+{% endif %}
+
+<form method="POST" action="/candidaturas/editar/{{ candidatura._id }}" class="form-container">
+    <div class="form-group">
+        <label for="candidato_id">Candidato:*</label>
+        <select id="candidato_id" name="candidato_id" class="form-control" required>
+            {% for c in candidatos %}
+            <option value="{{ c._id }}" {% if c._id|string == candidatura.candidato_id|string %}selected{% endif %}>
+                {{ c.nome }} ({{ c.email }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="empresa_id">Empresa:*</label>
+        <select id="empresa_id" name="empresa_id" class="form-control" required>
+            {% for e in empresas %}
+            <option value="{{ e._id }}" {% if e._id|string == candidatura.empresa_id|string %}selected{% endif %}>
+                {{ e.nome }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="vaga">Vaga / Cargo:*</label>
+        <input type="text" id="vaga" name="vaga" class="form-control" value="{{ candidatura.vaga }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="status">Status da Candidatura:*</label>
+        <select id="status" name="status" class="form-control" required>
+            {% for s in status_opcoes %}
+            <option value="{{ s }}" {% if candidatura.status == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button type="submit" class="btn-primary">Salvar Alterações</button>
+        <a href="/candidaturas" class="btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}
