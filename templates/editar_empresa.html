@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Editar Empresa</h2>
+
+{% if erro %}
+<div class="alert-error">
+    {{ erro }}
+</div>
+{% endif %}
+
+<form method="POST" action="/empresas/editar/{{ empresa._id }}" class="form-container">
+    <div class="form-group">
+        <label for="nome">Nome da Empresa:*</label>
+        <input type="text" id="nome" name="nome" class="form-control" value="{{ empresa.nome }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="nif">NIF:*</label>
+        <input type="text" id="nif" name="nif" class="form-control" value="{{ empresa.nif }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">E-mail:*</label>
+        <input type="email" id="email" name="email" class="form-control" value="{{ empresa.email }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="setor">Setor:*</label>
+        <select id="setor" name="setor" class="form-control" required>
+            {% for s in setores %}
+            <option value="{{ s }}" {% if empresa.setor == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="fieldset-box">
+        <legend>Endereço / Localidade</legend>
+        
+        <div class="form-group">
+            <label for="rua">Rua:</label>
+            <input type="text" id="rua" name="rua" class="form-control" value="{{ empresa.localidade.rua if empresa.localidade else '' }}">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="numero">Número:</label>
+                <input type="text" id="numero" name="numero" class="form-control" value="{{ empresa.localidade.numero if empresa.localidade else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="cidade">Cidade:</label>
+                <input type="text" id="cidade" name="cidade" class="form-control" value="{{ empresa.localidade.cidade if empresa.localidade else '' }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="cp">Código Postal (XXXX-YYY):</label>
+            <input type="text" id="cp" name="cp" class="form-control" value="{{ empresa.localidade.cp if empresa.localidade else '' }}">
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button type="submit" class="btn-primary">Salvar Alterações</button>
+        <a href="/empresas" class="btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

@@ -15,6 +15,7 @@
                 <th>E-mail</th>
                 <th>Setor</th>
                 <th>Cidade</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -33,10 +34,19 @@
                         -
                     {% endif %}
                 </td>
+                <td class="actions-cell">
+                    <!-- Link para abrir a página de edição passando o ID -->
+                    <a href="/empresas/editar/{{ empresa._id }}" class="btn-sm btn-edit">✏️ Editar</a>
+                    
+                    <!-- Formulário com botão para deletar passando o ID -->
+                    <form action="/empresas/excluir/{{ empresa._id }}" method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja apagar a empresa {{ empresa.nome }}?');">
+                        <button type="submit" class="btn-sm btn-delete">🗑️ Excluir</button>
+                    </form>
+                </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="5" class="empty-msg">Nenhuma empresa cadastrada ainda.</td>
+                <td colspan="6" class="empty-msg">Nenhuma empresa cadastrada ainda.</td>
             </tr>
             {% endfor %}
         </tbody>

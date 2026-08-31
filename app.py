@@ -152,6 +152,70 @@ def cadastrar_candidato():
 
     return render_template("novo_candidato.html", competencias=COMPETENCIAS_DISPONIVEIS)
 
+@app.route("/empresas/excluir/<id>", methods=["POST"])
+def excluir_empresa(id):
+    banco = conectar_banco()
+    banco["empresas"].delete_one({"_id": ObjectId(id)})
+    return redirect(url_for("listar_empresas"))
+
+
+@app.route("/empresas/editar/<id>", methods=["GET", "POST"])
+def editar_empresa(id):
+    banco = conectar_banco()
+    empresas_coll = banco["empresas"]
+    
+    # Busca a empresa atual pelo ID
+    empresa = empresas_coll.find_one({"_id": ObjectId(id)})
+    if not empresa:
+        return redirect(url_for("listar_empresas"))
+
+    erro = None
+
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        rua = request.form.get("rua", "").strip()
+        numero = request.form.get("numero", "").strip()
+        cidade = request.form.get("cidade", "").strip()
+        cp = request.form.get("cp", "").strip()
+        nif = request.form.get("nif", "").strip()
+        setor = request.form.get("setor", "").strip()
+        email = request.form.get("email", "").strip()
+
+        # Validações básicas
+        if not validar_nif(nif):
+            erro = "NIF inválido. Certifique-se de que possui exatamente 9 dígitos."
+        # Checa duplicidade Apenas se NIF/Email mudaram em relação ao valor atual
+        elif nif != empresa.get("nif") and nif_existe(nif, empresas_coll):
+            erro = "Este NIF já está cadastrado para outra empresa."
+        elif not validar_email(email):
+            erro = "Endereço de e-mail inválido."
+        elif email != empresa.get("email") and email_existe(email, empresas_coll):
+            erro = "Este e-mail já está cadastrado para outra empresa."
+        elif not validar_cp(cp):
+            erro = "Código Postal inválido. Use o formato XXXX-YYY."
+
+        if erro:
+            return render_template("editar_empresa.html", empresa=empresa, setores=SETORES, erro=erro)
+
+        # Atualiza no MongoDB
+        empresas_coll.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {
+                "nome": nome,
+                "localidade": {
+                    "rua": rua,
+                    "numero": numero,
+                    "cidade": cidade,
+                    "cp": cp
+                },
+                "nif": nif,
+                "setor": setor,
+                "email": email
+            }}
+        )
+        return redirect(url_for("listar_empresas"))
+
+    return render_template("editar_empresa.html", empresa=empresa, setores=SETORES)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
