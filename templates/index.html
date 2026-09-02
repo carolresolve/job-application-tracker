@@ -1,31 +1,74 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="boas-vindas">
-    <h2>🚀 Painel de Controle</h2>
-    <p>Gerencie seus candidatos, empresas e candidaturas em um só lugar.</p>
+<div class="dashboard-header">
+    <h2>📊 Dashboard de Estatísticas</h2>
 </div>
 
-<div class="dashboard-grid">
-    <div class="card">
-        <h3>Candidatos</h3>
-        <span class="card-number">{{ total_candidatos }}</span>
-        <a href="/candidatos" class="btn-primary" style="text-align: center;">Ver Todos</a>
+<!-- CARDS DE RESUMO -->
+<div class="cards-grid">
+    <div class="card card-blue">
+        <div class="card-title">Total Candidatos</div>
+        <div class="card-value">{{ total_candidatos or 0 }}</div>
+    </div>
+    
+    <div class="card card-green">
+        <div class="card-title">Total Empresas</div>
+        <div class="card-value">{{ total_empresas or 0 }}</div>
+    </div>
+    
+    <div class="card card-purple">
+        <div class="card-title">Candidaturas Ativas</div>
+        <div class="card-value">{{ total_candidaturas or 0 }}</div>
     </div>
 
-    <div class="card">
-        <h3>Empresas</h3>
-        <span class="card-number">{{ total_empresas }}</span>
-        <a href="/empresas" class="btn-primary" style="text-align: center;">Ver Todas</a>
-    </div>
-
-    <div class="card">
-        <h3>Candidaturas</h3>
-        <span class="card-number">{{ total_candidaturas }}</span>
-        <div style="display: flex; gap: 0.5rem;">
-            <a href="/candidaturas" class="btn-primary" style="flex: 1; text-align: center;">Ver Todas</a>
-            <a href="/candidaturas/nova" class="btn-secondary" style="text-align: center;">+ Nova</a>
-        </div>
+    <div class="card card-gold">
+        <div class="card-title">Taxa de Aprovação</div>
+        <div class="card-value">{{ taxa_aprovacao or 0 }}%</div>
     </div>
 </div>
+
+<!-- ÁREA DE GRÁFICOS -->
+<div class="chart-container" style="margin-top: 2rem; background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h3>Funil de Status das Candidaturas</h3>
+    <div style="max-width: 500px; margin: 0 auto;">
+        <canvas id="statusChart"></canvas>
+    </div>
+</div>
+
+<!-- CDN DO CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Passa os dados com filtro tojson para evitar erros de sintaxe JS
+    const statusData = {{ status_counts | tojson }};
+    
+    const labels = Object.keys(statusData);
+    const values = Object.values(statusData);
+
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: [
+                    '#3498db',
+                    '#f1c40f',
+                    '#9b59b6',
+                    '#2ecc71',
+                    '#e74c3c'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}
